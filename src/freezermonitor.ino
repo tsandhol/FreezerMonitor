@@ -50,15 +50,13 @@ bool _shouldHandleButton = false;
 DallasTemperature dallas(new OneWire(SensorPin));
 
 LiquidCrystal lcd(LCD_RS, LCD_ENABLE, LCD_d4, LCD_d5, LCD_d6, LCD_d7);
-//LiquidCrystal lcd(D1, D2, D3, D4, D5, D6);
-uint8_t degrees[8] = {0x7,0x5,0x7,0x0,0x0,0x0,0x0};
+
 void setup() {
 
 
     Particle.variable("temp", tempF);
     Particle.variable("alarmst", alarmState);
     dallas.begin();
-    lcd.createChar(0, degrees);
     lcd.begin(16,2);
     lcd.clear();
     lcd.print("initializing...");
@@ -77,9 +75,6 @@ void setup() {
 
 
 
-/*void loop(){
-    disco();
-}*/
 void loop() {
     getTemperature();
     updateDisplay();
@@ -87,47 +82,6 @@ void loop() {
     handleButton();
     operateSpeaker();
     handleTimeSync();
-}
-
-void song(){
-    // notes in the melody:
-int melody[] = {1908,2551,2551,2273,2551,0,2024,1908}; //C4,G3,G3,A3,G3,0,B3,C4
-
-// note durations: 4 = quarter note, 8 = eighth note, etc.:
-int noteDurations[] = {4,8,8,4,4,4,4,4 };
-
- // iterate over the notes of the melody:
-  for (int thisNote = 0; thisNote < 8; thisNote++) {
-
-    // to calculate the note duration, take one second
-    // divided by the note type.
-    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-    int noteDuration = 1000/noteDurations[thisNote];
-    tone(SpeakerPin, melody[thisNote],noteDuration);
-
-    // to distinguish the notes, set a minimum time between them.
-    // the note's duration + 30% seems to work well:
-    int pauseBetweenNotes = noteDuration * 1.30;
-    delay(pauseBetweenNotes);
-    // stop the tone playing:
-    noTone(SpeakerPin);
-  }
-}
-
-
-void disco(){
-      for (int i = 0; i < 255; i++) {
-    setBacklight(i, 0, 255-i);
-    delay(5);
-  }
-  for (int i = 0; i < 255; i++) {
-    setBacklight(255-i, i, 0);
-    delay(5);
-  }
-  for (int i = 0; i < 255; i++) {
-    setBacklight(0, 255-i, i);
-    delay(5);
-  }
 }
 
 
